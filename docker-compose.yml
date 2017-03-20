@@ -4,13 +4,13 @@ services:
     build: ./web
     user: node
     volumes:
-      - ./web:/app
-      - /app/node_modules
+      - ./web:/web
+      - /web/node_modules
     ports:
       - "9001:9001"
     environment:
       - PORT=9001
-    command: pm2-docker start /app/index.js --watch
+    command: pm2-docker start index.js --watch
 
   nginx:
     image: nginx:mainline-alpine

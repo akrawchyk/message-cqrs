@@ -1,10 +1,11 @@
 FROM node:7.7-alpine
 
 # Install pm2
-RUN npm install --global --silent pm2
+RUN npm install --global --silent pm2 \
+      && npm cache clean
 
 # Install app
-WORKDIR /app
+WORKDIR /web
 ADD . .
 RUN yarn install
 
