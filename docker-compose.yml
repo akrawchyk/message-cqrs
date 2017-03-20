@@ -7,9 +7,10 @@ services:
       - ./web:/app
       - /app/node_modules
     ports:
-      - "9091:9001"
+      - "9001:9001"
     environment:
       - PORT=9001
+    command: pm2-docker start /app/index.js --watch
 
   nginx:
     image: nginx:mainline-alpine
@@ -20,7 +21,7 @@ services:
     links:
       - web
     environment:
-      - NGINX_HOST=foobar.com
+      - NGINX_HOST=localhost
       - NGINX_PORT=80
     command: /bin/sh -c "envsubst < /etc/nginx/conf.d/disqus-clone.template > /etc/nginx/conf.d/default.conf && nginx -g 'daemon off;'"
 

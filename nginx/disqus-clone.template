@@ -2,7 +2,7 @@ server {
 
   listen ${NGINX_PORT};
   server_name ${NGINX_HOST};
-  access_log /var/log/nginx/nodejs_project.log;
+  access_log /var/log/nginx/disqus-clone_project.log;
   charset utf-8;
 
   location / {
