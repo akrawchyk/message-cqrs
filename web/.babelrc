@@ -3,6 +3,6 @@
     "env"
   ],
   "plugins": [
-    "transform-regenerator"
+    "transform-runtime"
   ]
 }

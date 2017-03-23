@@ -9,6 +9,7 @@ services:
     ports:
       - "9001:9001"
     environment:
+      - HOST=localhost
       - PORT=9001
     command: pm2-docker start index.js --watch
 
@@ -20,10 +21,7 @@ services:
       - "8080:80"
     links:
       - web
-    environment:
-      - NGINX_HOST=localhost
-      - NGINX_PORT=80
-    command: /bin/sh -c "envsubst < /etc/nginx/conf.d/disqus-clone.template > /etc/nginx/conf.d/default.conf && nginx -g 'daemon off;'"
+    command: /bin/sh -c "cp /etc/nginx/conf.d/disqus-clone.template /etc/nginx/conf.d/default.conf && nginx -g 'daemon off;'"
     restart: always
 
   couchbase:

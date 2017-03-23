@@ -6,6 +6,7 @@ import api from './api/router'
 
 const app = express()
 
+app.set('trust proxy', 'loopback')
 app.enable('strict routing')
 
 app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')))
