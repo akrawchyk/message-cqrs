@@ -13,15 +13,26 @@
 
 <script>
 import axios from 'axios'
+import qs from 'qs'
+
 export default {
   name: 'index',
   methods: {
     submitText: function (e) {
       e.preventDefault()
-      console.log(e)
       const data = new FormData(e.target)
 
-      axios.post(`${process.env.API_URL}/api/command/`, data)
+      const ajax = axios.create({
+        baseURL: `${process.env.API_URL}`,
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded; charset=utf-8',
+          'X-Requested-With': 'XMLHttpRequest'
+        }
+      })
+
+      ajax.post('/api/command/', qs.stringify({
+        text: data.get('text')
+      }))
         .then(res => {
           res.text()
         })

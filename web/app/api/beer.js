@@ -2,7 +2,7 @@ import couchbase from 'couchbase'
 import uuid from 'uuid'
 
 const cluster = new couchbase.Cluster('couchbase://couchbase')
-const bucket = cluster.openBucket('default')
+const bucket = cluster.openBucket('beer-sample')
 
 export async function createComment(text) {
   return new Promise(function(resolve, reject) {
@@ -12,7 +12,7 @@ export async function createComment(text) {
       }
 
       resolve({
-        data: 'success'
+        data: doc
       })
     })
   })

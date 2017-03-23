@@ -24,8 +24,7 @@ async function helloWorld(req, res, next) {
 async function command(req, res, next) {
   await timeout(1000)
 
-  const body = req.body
-  const text = body.text || ''
+  const text = req.body.text || ''
 
   // process incoming command
   try {
