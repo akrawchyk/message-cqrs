@@ -1,7 +1,7 @@
 import express from 'express'
 import bodyParser from 'body-parser'
 import cors from 'cors'
-import { createComment } from './beer'
+import { createComment, getComments } from './beer'
 
 const router = express.Router()
 const urlencodedParser = bodyParser.urlencoded({ extended: false })
@@ -12,13 +12,23 @@ function timeout(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
 
-// FIXME catch errors for ALL async functions
-
-async function helloWorld(req, res, next) {
+async function query(req, res, next) {
   await timeout(1000)
-  res.json({
-    success: 'true'
-  })
+
+  const limit = req.query.limit || 10
+
+  try {
+    const comments = await getComments(limit)
+    res.json({
+      'status': 'success',
+      comments
+    })
+  } catch (err) {
+    res.status(500).json({
+      status: 'error',
+      message: err.message
+    })
+  }
 }
 
 async function command(req, res, next) {
@@ -26,17 +36,22 @@ async function command(req, res, next) {
 
   const text = req.body.text || ''
 
-  // process incoming command
   try {
     const doc = await createComment(text)
-    res.json(doc)
+    res.json({
+      status: 'success',
+      doc
+    })
   } catch (err) {
-    res.status(500).send(err.message)
+    res.status(500).json({
+      status: 'error',
+      message: err.message
+    })
   }
 }
 
 router
-  .get('/query', helloWorld)
+  .get('/query', query)
   .post('/command', urlencodedParser, command)
 
 export default router
