@@ -11,28 +11,33 @@
 
 <script>
 import axios from 'axios'
+import qs from 'qs'
 
 export default {
   name: 'comment-form',
   methods: {
     submitText: async function (e) {
       e.preventDefault()
-      const data = new FormData(e.target)
+      const data = {
+        text: encodeURIComponent(this.text),  // TODO computed property?
+        timestamp: Date.now()
+      }
+      console.log(qs.stringify(data))
       const ajax = axios.create({
         baseURL: process.env.API_URL,
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded; charset=utf-8',
           'X-Requested-With': 'XMLHttpRequest'
-        },
-        data
+        }
       })
 
       try {
-        const res = await ajax.post('/api/command/')
+        const res = await ajax.post('/api/command/', qs.stringify(data))
+        console.log(res)
         this.$emit('submitSuccess')
-        console.log(res.data)
       } catch (err) {
         console.log(err)
+        throw new Error(`Unhandled: ${err.message}`)
       } finally {
         this.isSubmitting = false
       }

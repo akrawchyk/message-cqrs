@@ -1,7 +1,7 @@
 import express from 'express'
 import bodyParser from 'body-parser'
 import cors from 'cors'
-import { createComment, getComments } from './beer'
+import { createComment, getComments } from './db'
 
 const router = express.Router()
 const urlencodedParser = bodyParser.urlencoded({ extended: false })
@@ -15,10 +15,11 @@ function timeout(ms) {
 async function query(req, res, next) {
   await timeout(1000)
 
-  const limit = req.query.limit || 10
+  const limit = req.query.limit
 
   try {
     const comments = await getComments(limit)
+    console.log(comments[0])
     res.json({
       'status': 'success',
       comments
@@ -34,10 +35,11 @@ async function query(req, res, next) {
 async function command(req, res, next) {
   await timeout(1000)
 
-  const text = req.body.text || ''
+  const text = req.body.text
+  const timestamp = req.body.timestamp
 
   try {
-    const doc = await createComment(text)
+    const doc = await createComment(text, timestamp)
     res.json({
       status: 'success',
       doc

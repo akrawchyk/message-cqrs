@@ -27,7 +27,7 @@ export default {
 
       try {
         const res = await ajax.get('/api/query/')
-        this.comments = res.data.comments.map(comment => comment['beer-sample'])
+        this.comments = res.data.comments[0]
         console.log(res)
       } catch (err) {
         console.log(err)
