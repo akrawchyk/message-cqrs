@@ -14,7 +14,7 @@ app.use(slashes())
 
 app.use('/api', api)
 
-app.get('/', function (req, res) {
+app.get('/', (req, res) => {
   res.send('Hello disqus-clone\n')
 })
 

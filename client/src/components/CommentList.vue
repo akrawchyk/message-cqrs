@@ -28,7 +28,6 @@
             }
           })
           this.comments = res.data.data.map((c) => {
-            console.log(c)
             return c.default  // unwrap
           })
         } catch (err) {
