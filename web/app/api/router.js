@@ -1,12 +1,9 @@
 import express from 'express'
 import bodyParser from 'body-parser'
-import cors from 'cors'
 import Comment from './comments.js'
 
 const router = express.Router()
 const urlencodedParser = bodyParser.urlencoded({ extended: false })
-
-router.use(cors())
 
 function timeout(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));

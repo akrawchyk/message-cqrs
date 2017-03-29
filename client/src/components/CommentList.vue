@@ -7,46 +7,52 @@
 </template>
 
 <script>
-import axios from 'axios'
-import Comment from './Comment'
+  import axios from 'axios'
+  import Comment from './Comment'
 
-export default {
-  name: 'CommentList',
-  methods: {
-    getComments: async function (limit) {
-      // query for comments wtih axios
-      const ajax = axios.create({
-        baseURL: process.env.API_URL,
-        headers: {
-          'X-Requested-With': 'XMLHttpRequest'
-        },
-        params: {
-          limit
+  const ajax = axios.create({
+    baseURL: process.env.API_URL,
+    headers: {
+      'X-Requested-With': 'XMLHttpRequest'
+    }
+  })
+
+  export default {
+    name: 'CommentList',
+    methods: {
+      getComments: async function (limit) {
+        try {
+          const res = await ajax.get('/api/query/', {
+            params: {
+              limit
+            }
+          })
+          this.comments = res.data.data.map((c) => {
+            console.log(c)
+            return c.default  // unwrap
+          })
+        } catch (err) {
+          console.log(err)
         }
-      })
-
-      try {
-        const res = await ajax.get('/api/query/')
-        this.comments = res.data.data
-        console.log(res)
-      } catch (err) {
-        console.log(err)
       }
+    },
+    data () {
+      return {
+        comments: []
+      }
+    },
+    created () {
+      this.getComments(5)
+    },
+    components: {
+      Comment
     }
-  },
-  data () {
-    return {
-      comments: []
-    }
-  },
-  created () {
-    this.getComments(5)
-  },
-  components: {
-    Comment
   }
-}
 </script>
 
 <style scoped>
+  .CommentList {
+    list-style: none;
+    padding: 0;
+  }
 </style>

@@ -16,13 +16,17 @@ const N1qlQuery = couchbase.N1qlQuery
 
 const Comment = ottoman.model('Comment', {
   commentId: { type: 'string', auto: 'uuid', readonly: true },
-  createdAt: { type: 'Date', default: (new Date()).toISOString() },
+  createdAt: { type: 'Date', default: function() {
+    return (new Date()).toISOString()
+  }},
   text: { type: 'string' },
   timestamp: { type: 'Date' }
 })
 
 ottoman.ensureIndices(function(err) {
-  console.log(err)
+  if (err) {
+    console.log(err)
+  }
 })
 
 Comment.createAndSave = Promise.promisify(function(text, timestamp, done) {
