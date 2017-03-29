@@ -31,7 +31,11 @@ Comment.getRecent = Promise.promisify(function(limit, done) {
   const past24Hours = date.toISOString()
   bucket.query(
     N1qlQuery.fromString(
-      `SELECT * FROM ${BUCKET_NAME} WHERE STR_TO_MILLIS(${BUCKET_NAME}.createdAt) BETWEEN STR_TO_MILLIS($1) AND STR_TO_MILLIS($2) LIMIT ${limit}`
+      `SELECT * FROM ${BUCKET_NAME}
+        WHERE STR_TO_MILLIS(${BUCKET_NAME}.createdAt)
+          BETWEEN STR_TO_MILLIS($1) AND STR_TO_MILLIS($2)
+        ORDER BY createdAt DESC
+        LIMIT ${limit}`
     ),
     [past24Hours, now],
     done
