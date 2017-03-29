@@ -16,7 +16,11 @@ async function query(req, res, next) {
 
   try {
     const data = await Comment.getRecent(limit)
+    data = data.map((c) => {
+      return c.default  // unwrap N1ql query
+    })
     res.json({
+      status: '200',
       data
     })
   } catch (err) {
@@ -38,6 +42,7 @@ async function command(req, res, next) {
   try {
     const data = await Comment.createAndSave(text, timestamp)
     res.status(201).json({
+      status: '201',
       data
     })
   } catch (err) {

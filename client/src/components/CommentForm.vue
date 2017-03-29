@@ -26,6 +26,7 @@
     methods: {
       submitText: async function (e) {
         e.preventDefault()
+
         const data = {
           text: encodeURIComponent(this.text),
           timestamp: (new Date()).toISOString()
@@ -34,6 +35,7 @@
         try {
           await ajax.post('/api/command/', qs.stringify(data))
           this.$emit('submitSuccess')
+          this.clearText()
         } catch (err) {
           console.log(err)
           throw new Error(`Unhandled: ${err.message}`)

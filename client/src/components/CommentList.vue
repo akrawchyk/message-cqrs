@@ -27,9 +27,7 @@
               limit
             }
           })
-          this.comments = res.data.data.map((c) => {
-            return c.default  // unwrap
-          })
+          this.comments = res.data.data
         } catch (err) {
           console.log(err)
         }

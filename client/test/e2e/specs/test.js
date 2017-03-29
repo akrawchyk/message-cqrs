@@ -17,7 +17,15 @@ module.exports = {
       .assert.elementCount('img', 1)
       .end()
   },
-  'submit comment': function (browser) {
+  'get comment': function (browser) {
+    browser
+      .url(browser.globals.devServerURL)
+      .waitForElementVisible('#App', 5000)
+      .assert.elementPresent('.CommentList')
+      .waitForElementVisible('.Comment', 2000)
+      .end()
+  },
+  'post comment': function (browser) {
     browser
       .url(browser.globals.devServerURL)
       .waitForElementVisible('#App', 5000)
