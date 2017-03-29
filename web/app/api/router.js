@@ -1,7 +1,7 @@
 import express from 'express'
 import bodyParser from 'body-parser'
 import cors from 'cors'
-import { createComment, getComments } from './db'
+import Comment from './comments.js'
 
 const router = express.Router()
 const urlencodedParser = bodyParser.urlencoded({ extended: false })
@@ -18,16 +18,16 @@ async function query(req, res, next) {
   const limit = req.query.limit
 
   try {
-    const comments = await getComments(limit)
-    console.log(comments[0])
+    const data = await Comment.getRecent(limit)
     res.json({
-      'status': 'success',
-      comments
+      data
     })
   } catch (err) {
     res.status(500).json({
-      status: 'error',
-      message: err.message
+      errors: [{
+        status: '500',
+        detail: err.message
+      }]
     })
   }
 }
@@ -39,15 +39,16 @@ async function command(req, res, next) {
   const timestamp = req.body.timestamp
 
   try {
-    const doc = await createComment(text, timestamp)
-    res.json({
-      status: 'success',
-      doc
+    const data = await Comment.createAndSave(text, timestamp)
+    res.status(201).json({
+      data
     })
   } catch (err) {
     res.status(500).json({
-      status: 'error',
-      message: err.message
+      errors: [{
+        status: '500',
+        detail: err.message
+      }]
     })
   }
 }

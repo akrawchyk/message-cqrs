@@ -19,8 +19,8 @@ export default {
     submitText: async function (e) {
       e.preventDefault()
       const data = {
-        text: encodeURIComponent(this.text),  // TODO computed property?
-        timestamp: Date.now()
+        text: encodeURIComponent(this.text),
+        timestamp: (new Date()).toISOString()
       }
       console.log(qs.stringify(data))
       const ajax = axios.create({
