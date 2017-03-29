@@ -1,5 +1,5 @@
 <template>
-  <div id="app">
+  <div id="App">
     <img src="./assets/logo.png">
     <router-view></router-view>
   </div>
@@ -21,7 +21,7 @@
     padding: 0.25em 0.5em;
   }
 
-  #app {
+  #App {
     font-family: 'Avenir', Helvetica, Arial, sans-serif;
     color: #2c3e50;
     margin-top: 60px;

@@ -7,13 +7,23 @@ module.exports = {
     // default: http://localhost:8081
     // see nightwatch.conf.js
     const devServer = browser.globals.devServerURL
+    console.log(devServer)
 
     browser
       .url(devServer)
-      .waitForElementVisible('#app', 5000)
-      .assert.elementPresent('#index')
+      .waitForElementVisible('#App', 5000)
+      .assert.elementPresent('.Index')
       .assert.containsText('h1', 'Index.vue')
       .assert.elementCount('img', 1)
+      .end()
+  },
+  'submit comment': function (browser) {
+    browser
+      .url(browser.globals.devServerURL)
+      .waitForElementVisible('#App', 5000)
+      .assert.elementPresent('.CommentForm')
+      .setValue('textarea.CommentForm-text', 'test')
+      .click('.CommentForm button[type="submit"]')
       .end()
   }
 }
