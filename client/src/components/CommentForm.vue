@@ -28,7 +28,7 @@
         e.preventDefault()
 
         const data = {
-          text: encodeURIComponent(this.text),
+          text: this.text,
           timestamp: (new Date()).toISOString()
         }
 

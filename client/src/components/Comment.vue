@@ -1,9 +1,9 @@
 <template>
   <div class="Comment">
-    <p class="Comment-date">{{ c.createdAt }} <span class="Comment-timestamp">(submitted {{ c.timestamp }})</span></p>
-    <p>
-      {{ decodeURIComponent(c.text) }}</p>
-  </p>
+    <p class="Comment-date">
+      {{ c.createdAt }} <span class="Comment-timestamp">(submitted {{ c.timestamp }})</span>
+    </p>
+    <p class="Comment-text">{{ decodeURIComponent(c.text) }}</p>
 </div>
 </template>
 
@@ -28,5 +28,9 @@
 
   .Comment-timestamp {
     color: #001209;
+  }
+
+  .Comment-text {
+    white-space: pre;
   }
 </style>
