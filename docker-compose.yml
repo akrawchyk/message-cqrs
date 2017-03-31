@@ -27,7 +27,7 @@ services:
   couchbase:
     image: couchbase:community-4.5.0
     volumes:
-      - ./data:/opt/couchbase/var
+      - ./tmp/data:/opt/couchbase/var
     deploy:
       replicas: 1
     ports:
