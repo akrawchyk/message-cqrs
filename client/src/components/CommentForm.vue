@@ -1,7 +1,7 @@
 <template>
   <div class="CommentForm">
-    <form v-bind:action="API_URL + '/api/command'" v-on:submit="submitText" method="post" rows="4">
-      <textarea class="CommentForm-text" v-model.trim="text" v-on:submitSuccess="clearText" name="text" placeholder="add multiple lines"></textarea>
+    <form v-bind:action="API_URL + '/api/command'" v-on:submit="submitText" method="post">
+      <textarea class="CommentForm-text" v-model.trim="text" name="text" placeholder="add multiple lines"></textarea>
       <div>
         <button v-on:click="isSubmitting = true" v-bind:disabled="isSubmitting" type="submit">Submit</button>
       </div>
@@ -12,6 +12,21 @@
 <script>
   import axios from 'axios'
   import qs from 'qs'
+  import Fingerprint2 from 'fingerprintjs2'
+
+  function getFingerprint2 () {
+    return new Promise((resolve, reject) => {
+      const fingerprint = new Fingerprint2()
+      try {
+        fingerprint.get((result, components) => {
+          // beware of updated components on version change
+          resolve(result)
+        })
+      } catch (err) {
+        reject(err)
+      }
+    })
+  }
 
   const ajax = axios.create({
     baseURL: process.env.API_URL,
@@ -27,14 +42,13 @@
       submitText: async function (e) {
         e.preventDefault()
 
-        const data = {
-          text: this.text,
-          timestamp: (new Date()).toISOString()
-        }
-
         try {
+          const fingerprint = await getFingerprint2()
+          const data = {
+            fingerprint,
+            text: this.text
+          }
           await ajax.post('/api/command/', qs.stringify(data))
-          this.$emit('submitSuccess')
           this.clearText()
         } catch (err) {
           console.log(err)

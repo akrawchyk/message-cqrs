@@ -1,4 +1,5 @@
 import couchbase from 'couchbase'
+import moment from 'moment'
 import ottoman from 'ottoman'
 
 const BUCKET_NAME = 'default'
@@ -10,25 +11,21 @@ ottoman.store = new ottoman.CbStoreAdapter(bucket, couchbase)
 
 const Comment = ottoman.model('Comment', {
   commentId: { type: 'string', auto: 'uuid', readonly: true },
-  createdAt: { type: 'Date', default: function() {
-    return (new Date()).toISOString()
-  }},
+  createdAt: { type: 'Date', default: moment.utc, readonly: true },
   text: { type: 'string' },
-  timestamp: { type: 'Date' }
+  fingerprint: { type: 'string' }
 })
 
-Comment.createAndSave = Promise.promisify(function(text, timestamp, done) {
+Comment.createAndSave = Promise.promisify(function(fingerprint, text, done) {
   this.create({
-    text,
-    timestamp
+    fingerprint,
+    text
   }, done)
 })
 
 Comment.getRecent = Promise.promisify(function(limit, done) {
-  const date = new Date()
-  const now = date.toISOString()
-  date.setDate(date.getDate() - 1)
-  const past24Hours = date.toISOString()
+  const past24Hours = moment.utc().subtract(1, 'days')
+  const now = moment.utc()
   bucket.query(
     N1qlQuery.fromString(
       `SELECT * FROM ${BUCKET_NAME}
@@ -37,7 +34,7 @@ Comment.getRecent = Promise.promisify(function(limit, done) {
         ORDER BY createdAt DESC
         LIMIT ${limit}`
     ),
-    [past24Hours, now],
+    [past24Hours.format(), now.format()],
     done
   )
 })

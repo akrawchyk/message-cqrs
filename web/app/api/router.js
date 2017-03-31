@@ -36,11 +36,11 @@ async function query(req, res, next) {
 async function command(req, res, next) {
   await timeout(1000)
 
+  const fingerprint = req.body.fingerprint
   const text = req.body.text
-  const timestamp = req.body.timestamp
 
   try {
-    const data = await Comment.createAndSave(text, timestamp)
+    const data = await Comment.createAndSave(fingerprint, text)
     res.status(201).json({
       status: '201',
       data
