@@ -1,6 +1,7 @@
 import express from 'express'
 import bodyParser from 'body-parser'
-import Comment from './comments.js'
+import Comment from './comments'
+import Event from './events'
 
 const router = express.Router()
 const urlencodedParser = bodyParser.urlencoded({ extended: false })
@@ -40,6 +41,8 @@ async function command(req, res, next) {
   const text = req.body.text
 
   try {
+    const e = new Event('message')
+
     const data = await Comment.createAndSave(fingerprint, text)
     res.status(201).json({
       status: '201',
