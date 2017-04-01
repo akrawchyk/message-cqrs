@@ -19,6 +19,7 @@
     "couchbase": "^2.3.0",
     "express": "^4.15.2",
     "moment": "^2.18.1",
+    "node-rdkafka": "^0.10.0",
     "ottoman": "https://github.com/couchbaselabs/node-ottoman#6dadd8f594c36899a94c90a585b560a74ab0849f",
     "serve-favicon": "^2.4.1"
   }

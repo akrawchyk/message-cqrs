@@ -1,5 +1,16 @@
 version: "3"
 services:
+  nginx:
+    image: nginx:mainline-alpine
+    volumes:
+      - ./nginx/disqus-clone.template:/etc/nginx/conf.d/disqus-clone.template
+    ports:
+      - "8080:80"
+    links:
+      - web
+    command: /bin/sh -c "cp /etc/nginx/conf.d/disqus-clone.template /etc/nginx/conf.d/default.conf && nginx -g 'daemon off;'"
+    restart: always
+
   web:
     build: ./web
     user: node
@@ -13,16 +24,15 @@ services:
       - PORT=9001
     command: pm2-docker start index.js --watch
 
-  nginx:
-    image: nginx:mainline-alpine
-    volumes:
-      - ./nginx/disqus-clone.template:/etc/nginx/conf.d/disqus-clone.template
+  kafka:
+    image: spotify/kafka
+    hostname: kafka
     ports:
-      - "8080:80"
-    links:
-      - web
-    command: /bin/sh -c "cp /etc/nginx/conf.d/disqus-clone.template /etc/nginx/conf.d/default.conf && nginx -g 'daemon off;'"
-    restart: always
+      - "2181:2181"
+      - "9092:9092"
+    environment:
+      - ADVERTISED_HOST=kafka
+      - ADVERTISED_PORT=9092
 
   couchbase:
     image: couchbase:community-4.5.0

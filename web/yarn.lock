@@ -562,7 +562,7 @@ bcrypt-pbkdf@^1.0.0:
   dependencies:
     tweetnacl "^0.14.3"
 
-bindings@~1.2.1:
+bindings@1.x, bindings@~1.2.1:
   version "1.2.1"
   resolved "https://registry.yarnpkg.com/bindings/-/bindings-1.2.1.tgz#14ad6113812d2d37d72e67b4cacb4bb726505f11"
 
@@ -1353,7 +1353,7 @@ ms@1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/ms/-/ms-1.0.0.tgz#59adcd22edc543f7b5381862d31387b1f4bc9473"
 
-nan@~2.3.2:
+nan@2.x, nan@~2.3.2:
   version "2.3.5"
   resolved "https://registry.yarnpkg.com/nan/-/nan-2.3.5.tgz#822a0dc266290ce4cd3a12282ca3e7e364668a08"
 
@@ -1397,6 +1397,13 @@ node-ninja@^1.0.1:
     semver "2.x || 3.x || 4 || 5"
     tar "^2.0.0"
     which "1"
+
+node-rdkafka@^0.10.0:
+  version "0.10.0"
+  resolved "https://registry.yarnpkg.com/node-rdkafka/-/node-rdkafka-0.10.0.tgz#403b96807926dd3c02acfdd2aaad1c8a330675db"
+  dependencies:
+    bindings "1.x"
+    nan "2.x"
 
 node-uuid@~1.4.7:
   version "1.4.8"
