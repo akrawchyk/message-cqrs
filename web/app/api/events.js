@@ -6,19 +6,6 @@ const producer = new Kafka.Producer({
   'dr_cb': true // Specifies that we want a delivery-report event to be generated
 })
 
-const consumer = new Kafka.KafkaConsumer({
-  'group.id': 'web',
-  'metadata.broker.list': 'kafka:9092',
-}, {})
-
-const readStream = consumer.getReadStream('commands')
-
-readStream.on('data', data => {
-  console.log('Kafka consumer got message')
-  console.log(data)
-})
-
-
 // Note that getWriteStream will create a new stream on every call. You should try to cache the returned stream for a topic after the first call.
 const writeStream = producer.getWriteStream('commands')
 
@@ -27,7 +14,6 @@ producer.setPollInterval(100)
 
 producer.on('delivery-report', (err, report) => {
   // Report of delivery statistics here:
-  //
   if (err) {
     console.log('Kafka producer delivery error')
     console.log(err)
@@ -44,6 +30,8 @@ writeStream.on('error', (err) => {
 
 class Event {
   constructor(message) {
+    console.log(message)
+
     this.queuedSuccess = writeStream.write(new Buffer(JSON.stringify(message)))
 
     if (!this.queuedSuccess) {

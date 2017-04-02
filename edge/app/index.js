@@ -1,9 +1,9 @@
+import Kafka from 'node-rdkafka'
 import couchbase from 'couchbase'
 import moment from 'moment'
 import ottoman from 'ottoman'
 
 const BUCKET_NAME = 'default'
-const N1qlQuery = couchbase.N1qlQuery
 const cluster = new couchbase.Cluster('couchbase://couchbase')
 const bucket = cluster.openBucket(BUCKET_NAME)
 
@@ -23,26 +23,26 @@ Comment.createAndSave = Promise.promisify(function(fingerprint, text, done) {
   }, done)
 })
 
-Comment.getRecent = Promise.promisify(function(limit, done) {
-  const past24Hours = moment.utc().subtract(1, 'days')
-  const now = moment.utc()
-  bucket.query(
-    N1qlQuery.fromString(
-      `SELECT * FROM ${BUCKET_NAME}
-        WHERE STR_TO_MILLIS(${BUCKET_NAME}.createdAt)
-          BETWEEN STR_TO_MILLIS($1) AND STR_TO_MILLIS($2)
-        ORDER BY createdAt DESC
-        LIMIT ${limit}`
-    ),
-    [past24Hours.format(), now.format()],
-    done
-  )
-})
-
 ottoman.ensureIndices((err) => {
   if (err) {
     console.log(err)
   }
 })
 
-export default Comment
+
+const consumer = new Kafka.KafkaConsumer({
+  'group.id': 'edge',
+  'metadata.broker.list': 'kafka:9092',
+}, {})
+
+const readStream = consumer.getReadStream('commands')
+
+readStream.on('data', async function(data) {
+  console.log('Kafka consumer got message')
+  console.log(data)
+
+  const value = JSON.parse(data.value.toString())
+  console.log(value)
+  const comment = await Comment.createAndSave(value.fingerprint, value.text)
+  console.log(comment)
+})
