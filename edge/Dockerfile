@@ -10,7 +10,7 @@ RUN npm install --global --silent node-gyp
 RUN npm install --global --silent pm2
 
 # Install app
-WORKDIR /web
+WORKDIR /edge
 ADD . .
 RUN yarn install --pure-lockfile
 
@@ -19,5 +19,4 @@ RUN npm uninstall --silent node-gyp \
     && npm cache clean \
     && yarn cache clean
 
-EXPOSE 9001
 CMD ["pm2-docker", "index.js"]
