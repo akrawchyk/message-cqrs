@@ -20,6 +20,7 @@ services:
     environment:
       - HOST=localhost
       - PORT=9001
+      - KAFKA_BROKER_LIST=kafka:9092
     command: pm2-docker start index.js --watch
     links:
       - nginx
@@ -42,6 +43,8 @@ services:
     volumes:
       - ./edge:/edge
       - /edge/node_modules
+    environment:
+      - KAFKA_BROKER_LIST=kafka:9092
     command: pm2-docker start index.js --watch
     links:
       - kafka
@@ -49,6 +52,7 @@ services:
 
   couchbase:
     image: couchbase:community-4.5.0
+    hostname: couchbase
     volumes:
       - ./tmp/data:/opt/couchbase/var
     deploy:
