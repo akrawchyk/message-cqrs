@@ -17,13 +17,16 @@ server {
     proxy_pass http://web:9001;
     proxy_redirect off;
 
-    # Socket.IO Support
+    #
+    # Websocket config
+    # https://www.nginx.com/blog/websocket-nginx/
+    #
     proxy_http_version 1.1;
     proxy_set_header Upgrade $http_upgrade;
     proxy_set_header Connection "upgrade";
 
     #
-    # Wide-open CORS config for nginx
+    # Wide-open CORS config
     # https://enable-cors.org/server_nginx.html
     #
     if ($request_method = 'OPTIONS') {
@@ -41,19 +44,20 @@ server {
       add_header 'Content-Length' 0;
       return 204;
     }
+
     if ($request_method = 'POST') {
       add_header 'Access-Control-Allow-Origin' '*';
       add_header 'Access-Control-Allow-Methods' 'GET, POST, OPTIONS';
       add_header 'Access-Control-Allow-Headers' 'DNT,X-CustomHeader,Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,Content-Range,Range';
       add_header 'Access-Control-Expose-Headers' 'DNT,X-CustomHeader,Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,Content-Range,Range';
     }
+
     if ($request_method = 'GET') {
       add_header 'Access-Control-Allow-Origin' '*';
       add_header 'Access-Control-Allow-Methods' 'GET, POST, OPTIONS';
       add_header 'Access-Control-Allow-Headers' 'DNT,X-CustomHeader,Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,Content-Range,Range';
       add_header 'Access-Control-Expose-Headers' 'DNT,X-CustomHeader,Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,Content-Range,Range';
     }
-
   }
 
 }
