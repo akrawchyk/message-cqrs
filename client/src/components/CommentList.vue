@@ -27,9 +27,10 @@
               limit
             }
           })
+
           this.comments = res.data.data
         } catch (err) {
-          console.log(err)
+          console.log(err, 'Comment List')
         }
       }
     },

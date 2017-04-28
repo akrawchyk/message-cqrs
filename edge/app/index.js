@@ -29,7 +29,7 @@ Comment.createAndSave = Promise.promisify(function(fingerprint, text, done) {
 
 ottoman.ensureIndices((err) => {
   if (err) {
-    console.log(err)
+    console.log('edge/app/index.js', err)
   }
 })
 

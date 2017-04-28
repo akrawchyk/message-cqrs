@@ -1,4 +1,5 @@
 import express from 'express'
+import cors from 'cors'
 import bodyParser from 'body-parser'
 import couchbase from 'couchbase'
 import moment from 'moment'
@@ -37,8 +38,8 @@ async function query(req, res, next) {
   const limit = req.query.limit
 
   try {
-    const data = await getRecentComments(limit)
-    data = data.map((c) => {
+    let queryRes = await getRecentComments(limit)
+    const data = queryRes.map((c) => {
       return c.default  // unwrap N1ql query
     })
     res.json({
@@ -85,6 +86,7 @@ async function command(req, res, next) {
 }
 
 router
+  .use(cors())
   .get('/query', query)
   .post('/command', urlencodedParser, command)
 

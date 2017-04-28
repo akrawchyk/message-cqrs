@@ -1,9 +1,9 @@
 <template>
   <div class="CommentForm">
-    <form v-bind:action="API_URL + '/api/command'" v-on:submit="submitText" method="post">
+    <form v-bind:action="API_URL + '/api/command'" v-on:submit.prevent method="post">
       <textarea class="CommentForm-text" v-model.trim="text" name="text" placeholder="add multiple lines"></textarea>
       <div>
-        <button v-on:click="isSubmitting = true" v-bind:disabled="isSubmitting" type="submit">Submit</button>
+        <button v-on:click="onSubmit" v-bind:disabled="isSubmitting" type="submit">Submit</button>
       </div>
     </form>
   </div>
@@ -17,6 +17,7 @@
   function getFingerprint2 () {
     return new Promise((resolve, reject) => {
       const fingerprint = new Fingerprint2()
+
       try {
         fingerprint.get((result, components) => {
           // beware of updated components on version change
@@ -39,8 +40,8 @@
   export default {
     name: 'comment-form',
     methods: {
-      submitText: async function (e) {
-        e.preventDefault()
+      onSubmit: async function () {
+        this.isSubmitting = true
 
         try {
           const fingerprint = await getFingerprint2()
@@ -51,7 +52,6 @@
           await ajax.post('/api/command/', qs.stringify(data))
           this.clearText()
         } catch (err) {
-          console.log(err)
           throw new Error(`Unhandled: ${err.message}`)
         } finally {
           this.isSubmitting = false

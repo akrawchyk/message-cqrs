@@ -44,6 +44,8 @@ class Event {
 
     if (!this.queuedSuccess) {
       console.log('Kafka stream write warning, too many messages in our queue already')
+    } else {
+      console.log(`Kafka queued ${message}`)
     }
   }
 }
