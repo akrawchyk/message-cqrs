@@ -51,7 +51,7 @@ services:
       - couchbase
 
   couchbase:
-    image: couchbase:community-4.5.0
+    image: couchbase:community-4.5.1
     hostname: couchbase
     volumes:
       - ./tmp/data:/opt/couchbase/var

@@ -38,7 +38,7 @@ writeStream.on('error', (err) => {
   console.log(err)
 })
 
-class Event {
+class DomainEvent {
   constructor(message) {
     this.queuedSuccess = writeStream.write(new Buffer(JSON.stringify(message)))
 
@@ -48,4 +48,4 @@ class Event {
   }
 }
 
-export default Event
+export default DomainEvent
