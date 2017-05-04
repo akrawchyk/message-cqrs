@@ -1,13 +1,15 @@
 import express from 'express'
 import bodyParser from 'body-parser'
+import cors from 'cors'
 import couchbase from 'couchbase'
 import moment from 'moment'
-import Event from './events'
+import DomainEvent from './events'
 
 const BUCKET_NAME = 'default'
 const N1qlQuery = couchbase.N1qlQuery
-const cluster = new couchbase.Cluster('couchbase://couchbase')
+const cluster = new couchbase.Cluster('couchbase://couchbase/?detailed_errcodes=1')
 const bucket = cluster.openBucket(BUCKET_NAME)
+
 const getRecentComments = Promise.promisify(function(limit, done) {
   const past24Hours = moment.utc().subtract(1, 'days')
   const now = moment.utc()
@@ -25,6 +27,8 @@ const getRecentComments = Promise.promisify(function(limit, done) {
 })
 
 const router = express.Router()
+router.all('*', cors())
+
 const urlencodedParser = bodyParser.urlencoded({ extended: false })
 
 function timeout(ms) {
@@ -38,12 +42,12 @@ async function query(req, res, next) {
 
   try {
     const data = await getRecentComments(limit)
-    data = data.map((c) => {
+    const comments = data.map((c) => {
       return c.default  // unwrap N1ql query
     })
     res.json({
       status: '200',
-      data
+      comments
     })
   } catch (err) {
     res.status(500).json({
@@ -62,7 +66,7 @@ async function command(req, res, next) {
   const text = req.body.text
 
   try {
-    const queuedSuccess = new Event({
+    const queuedSuccess = new DomainEvent({
       type: 'CREATE_COMMENT',
       fingerprint,
       text

@@ -1,9 +1,9 @@
 <template>
   <div class="CommentForm">
-    <form v-bind:action="API_URL + '/api/command'" v-on:submit="submitText" method="post">
+    <form v-bind:action="API_URL + '/api/command'" v-on:submit.prevent method="post" novalidate>
       <textarea class="CommentForm-text" v-model.trim="text" name="text" placeholder="add multiple lines"></textarea>
       <div>
-        <button v-on:click="isSubmitting = true" v-bind:disabled="isSubmitting" type="submit">Submit</button>
+        <button v-on:click.prevent="submitText" v-bind:disabled="isSubmitting" type="submit">Submit</button>
       </div>
     </form>
   </div>
@@ -40,7 +40,7 @@
     name: 'comment-form',
     methods: {
       submitText: async function (e) {
-        e.preventDefault()
+        this.isSubmitting = true
 
         try {
           const fingerprint = await getFingerprint2()
@@ -52,7 +52,7 @@
           this.clearText()
         } catch (err) {
           console.log(err)
-          throw new Error(`Unhandled: ${err.message}`)
+          throw new Error(`POST error: ${err.message}`)
         } finally {
           this.isSubmitting = false
         }
